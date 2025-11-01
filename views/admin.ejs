@@ -13,23 +13,23 @@
     <table>
         <thead>
         <tr>
-            <th>
-                Имя пользователя
-            </th>
-            <th>
-                Пароль
-            </th>
-            <th>
-                Роль
-            </th>
-            <th>
-                Действия
-            </th>
+            <th>Аватар</th>
+            <th>Имя пользователя</th>
+            <th>Пароль</th>
+            <th>Роль</th>
+            <th>Действия</th>
         </tr>
         </thead>
         <tbody>
         <% users.forEach(user => {%>
             <tr>
+                <td style="text-align: center;">
+                    <% if (user.avatar) { %>
+                    <img src="<%= user.avatar %>" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                    <% } else { %>
+                    <span style="font-size: 2rem;">👤</span>
+                    <% } %>
+                </td>
                 <td><%= user.username %></td>
                 <td><%= user.password %></td>
                 <td><%= user.Role.name %></td>

@@ -21,7 +21,16 @@
                 </a>
             </li>
             <% if (typeof user !== 'undefined' && user) { %>
-            <li><a href="/profile">Профиль</a></li>
+            <li>
+                <a href="/profile" class="user-info">
+                    <% if (typeof userAvatar !== 'undefined' && userAvatar) { %>
+                    <img src="<%= userAvatar %>" alt="Avatar" class="user-avatar">
+                    <% } else { %>
+                    <span style="font-size: 1.5rem; margin-right: 0.5rem;"></span>
+                    <% } %>
+                    Профиль
+                </a>
+            </li>
             <li><a href="/logout">Выйти</a></li>
             <% } else { %>
             <li><a href="/login">Войти</a></li>

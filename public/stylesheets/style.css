@@ -77,6 +77,21 @@ nav .cart-badge {
   font-size: 0.75rem;
 }
 
+nav .user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+nav .user-info {
+  display: flex;
+  align-items: center;
+}
+
 /* Главная страница */
 .hero {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

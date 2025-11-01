@@ -18,6 +18,16 @@ async function getCartItemsCount(userId) {
   }
 }
 
+async function getUserAvatar(userId) {
+  if (!userId) return null;
+  try {
+    const user = await User.findByPk(userId);
+    return user ? user.avatar : null;
+  } catch (err) {
+    return null;
+  }
+}
+
 router.get('/', (req, res) => {
   res.redirect('/home');
 });
@@ -25,7 +35,8 @@ router.get('/', (req, res) => {
 router.get('/home', async (req, res) => {
   const user = req.session.user || null;
   const cartItemsCount = user ? await getCartItemsCount(user.id) : 0;
-  res.render('home', { user, cartItemsCount });
+  const userAvatar = user ? await getUserAvatar(user.id) : null;
+  res.render('home', { user, cartItemsCount, userAvatar });
 });
 
 router.get('/catalog', async (req, res) => {
@@ -33,7 +44,8 @@ router.get('/catalog', async (req, res) => {
     const products = await Product.findAll({ order: [['name', 'ASC']] });
     const user = req.session.user || null;
     const cartItemsCount = user ? await getCartItemsCount(user.id) : 0;
-    res.render('catalog', { products, user, cartItemsCount });
+    const userAvatar = user ? await getUserAvatar(user.id) : null;
+    res.render('catalog', { products, user, cartItemsCount, userAvatar });
   } catch (err) {
     res.status(500).send('Ошибка загрузки каталога: ' + err.message);
   }
@@ -58,12 +70,14 @@ router.get('/cart', isAuthorized, async (req, res) => {
     }, 0);
 
     const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const userAvatar = await getUserAvatar(user.id);
 
     res.render('cart', { 
       cartItems, 
       totalPrice, 
       user, 
-      cartItemsCount 
+      cartItemsCount,
+      userAvatar 
     });
   } catch (err) {
     res.status(500).send('Ошибка загрузки корзины: ' + err.message);
@@ -133,11 +147,15 @@ router.get(
     async (req, res) => {
   const user = req.session.user;
   const cartItemsCount = await getCartItemsCount(user.id);
-  res.render('profile', { user, cartItemsCount });
+  
+  const dbUser = await User.findByPk(user.id);
+  const userAvatar = dbUser ? dbUser.avatar : null;
+  
+  res.render('profile', { user, cartItemsCount, userAvatar });
 });
 
 router.post('/profileUpdate', isAuthorized, hasRole('Пользователь'), async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, avatar } = req.body;
   const currentUser = req.session.user;
 
   const existingUser = await User.findOne({ where: { username } });
@@ -147,9 +165,22 @@ router.post('/profileUpdate', isAuthorized, hasRole('Пользователь'),
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  await User.update({ username, password: hashedPassword }, { where: { id: currentUser.id } });
-  const updatedUser = await User.findByPk(currentUser.id);
-  req.session.user = updatedUser.toJSON();
+  const updateData = { 
+    username, 
+    password: hashedPassword 
+  };
+  
+  if (avatar && avatar.trim() !== '') {
+    updateData.avatar = avatar;
+  }
+
+  await User.update(updateData, { where: { id: currentUser.id } });
+  const updatedUser = await User.findByPk(currentUser.id, { include: Role });
+  req.session.user = { 
+    id: updatedUser.id, 
+    username: updatedUser.username, 
+    role: updatedUser.Role.name 
+  };
 
   res.redirect('/profile');
 });

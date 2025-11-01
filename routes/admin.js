@@ -67,8 +67,19 @@ router.post('/delete-user/:id', async (req, res) => {
 router.post('/edit-user/:id', express.urlencoded({extended: true}), async (req, res) => {
     try {
         const userId = req.params.id;
-        const {username, password, roleId} = req.body;
-        await User.update({username: username, password: password, roleId: roleId}, {where: {id: userId}});
+        const {username, password, roleId, avatar} = req.body;
+        
+        const updateData = {
+            username: username, 
+            password: password, 
+            roleId: roleId
+        };
+        
+        if (avatar && avatar.trim() !== '') {
+            updateData.avatar = avatar;
+        }
+        
+        await User.update(updateData, {where: {id: userId}});
         res.redirect('/admin/panel');
     } catch (err) {
       console.log(err);

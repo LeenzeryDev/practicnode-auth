@@ -40,6 +40,11 @@ const User = sequelize.define('User', {
             key: 'id'
         },
         allowNull: false
+    },
+    avatar: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        defaultValue: null
     }
 });
 
