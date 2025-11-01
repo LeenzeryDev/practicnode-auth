@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Управление товарами</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+    <h1>Управление товарами</h1>
+    <a href="/admin/create-product" class="btn">Добавить новый товар</a>
+    <div class="products-grid">
+        <% products.forEach(function(product) { %>
+            <div class="product-card">
+                <% if (product.image) { %>
+                    <img src="<%= product.image %>" alt="<%= product.name %>" class="product-image">
+                <% } else { %>
+                    <div class="no-image">Нет изображения</div>
+                <% } %>
+                <h3><%= product.name %></h3>
+                <p><%= product.description %></p>
+                <p>Цена: <%= product.price %> ₽</p>
+                <p>В наличии: <%= product.stock %></p>
+                <div class="product-actions">
+                    <a href="/admin/edit-product/<%= product.id %>" class="btn">Редактировать</a>
+                    <form action="/admin/delete-product/<%= product.id %>" method="POST" style="display: inline;">
+                        <button type="submit" class="btn delete" onclick="return confirm('Вы уверены?')">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+    <a href="/admin/panel">Вернуться к панели администратора</a>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Создать товар</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+    <h1>Создать новый товар</h1>
+    
+    <div style="text-align: center; margin: 2rem 0;">
+        <div id="imagePreview" style="width: 200px; height: 200px; margin: 0 auto; border-radius: 8px; overflow: hidden; border: 3px solid #007bff; background: #f0f2f5; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 3rem; color: #ccc;">🖼️</span>
+        </div>
+        <label for="imageInput" style="display: inline-block; margin-top: 1rem; cursor: pointer; color: #007bff;">
+            Выбрать изображение
+        </label>
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+    </div>
+    
+    <form id="createProductForm" action="/admin/create-product" method="POST">
+        <input type="hidden" id="imageData" name="image" value="">
+        
+        <div>
+            <label for="name">Название:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+            <label for="description">Описание:</label>
+            <textarea id="description" name="description"></textarea>
+        </div>
+        <div>
+            <label for="price">Цена:</label>
+            <input type="number" id="price" name="price" step="0.01" required>
+        </div>
+        <div>
+            <label for="stock">Количество в наличии:</label>
+            <input type="number" id="stock" name="stock" required>
+        </div>
+        <div>
+            <label for="category">Категория:</label>
+            <input type="text" id="category" name="category">
+        </div>
+        <button type="submit">Создать товар</button>
+    </form>
+    <a href="/admin/products">Вернуться к списку товаров</a>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const imageData = document.getElementById('imageData');
+
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Файл слишком большой. Максимальный размер: 5MB');
+                    return;
+                }
+
+                if (!file.type.startsWith('image/')) {
+                    alert('Пожалуйста, выберите изображение');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const base64String = event.target.result;
+                    imagePreview.innerHTML = `<img src="${base64String}" alt="Product Image" style="width: 100%; height: 100%; object-fit: cover;">`;
+                    imageData.value = base64String;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
