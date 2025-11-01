@@ -6,6 +6,7 @@ const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
+const productRouter = require('./routes/product');
 
 let app = express();
 
@@ -25,9 +26,14 @@ app.use(session({
     cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 }
 }));
 
-
 app.use('/', indexRouter);
+app.use('/', productRouter);
 app.use('/admin', adminRouter);
+
+app.use((req, res, next) => {
+    const user = req.session.user || null;
+    res.status(404).render('error-404', { user });
+});
 
 app.listen(process.env.PORT || 3000, () => {})
 

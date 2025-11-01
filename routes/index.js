@@ -1,16 +1,72 @@
 const express = require('express');
 const path = require('path');
-const { User, Role, sequelize } = require('../db');
+const { User, Role, Product, Cart, CartItem, sequelize } = require('../db');
 const bcrypt = require("bcrypt");
 const { isAuthorized, hasRole } = require('../auth');
 
 const router = express.Router();
 
+async function getCartItemsCount(userId) {
+  if (!userId) return 0;
+  try {
+    const cart = await Cart.findOne({ where: { userId } });
+    if (!cart) return 0;
+    const items = await CartItem.findAll({ where: { cartId: cart.id } });
+    return items.reduce((sum, item) => sum + item.quantity, 0);
+  } catch (err) {
+    return 0;
+  }
+}
+
 router.get('/', (req, res) => {
-  if (req.session.user) {
-    res.redirect('/profile');
-  } else {
-    res.redirect('/login');
+  res.redirect('/home');
+});
+
+router.get('/home', async (req, res) => {
+  const user = req.session.user || null;
+  const cartItemsCount = user ? await getCartItemsCount(user.id) : 0;
+  res.render('home', { user, cartItemsCount });
+});
+
+router.get('/catalog', async (req, res) => {
+  try {
+    const products = await Product.findAll({ order: [['name', 'ASC']] });
+    const user = req.session.user || null;
+    const cartItemsCount = user ? await getCartItemsCount(user.id) : 0;
+    res.render('catalog', { products, user, cartItemsCount });
+  } catch (err) {
+    res.status(500).send('Ошибка загрузки каталога: ' + err.message);
+  }
+});
+
+router.get('/cart', isAuthorized, async (req, res) => {
+  try {
+    const user = req.session.user;
+    let cart = await Cart.findOne({ where: { userId: user.id } });
+    
+    if (!cart) {
+      cart = await Cart.create({ userId: user.id });
+    }
+
+    const cartItems = await CartItem.findAll({
+      where: { cartId: cart.id },
+      include: [{ model: Product }]
+    });
+
+    const totalPrice = cartItems.reduce((sum, item) => {
+      return sum + (parseFloat(item.Product.price) * item.quantity);
+    }, 0);
+
+    const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+    res.render('cart', { 
+      cartItems, 
+      totalPrice, 
+      user, 
+      cartItemsCount 
+    });
+  } catch (err) {
+    res.status(500).send('Ошибка загрузки корзины: ' + err.message);
   }
 });
 
@@ -40,7 +96,7 @@ router.post('/register',
 });
 
 router.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login', { layout: false });
 });
 
 router.post(
@@ -57,8 +113,10 @@ router.post(
         if (user.Role.name === 'Администратор') {
           res.redirect('/admin/panel');
         } else {
-          res.redirect('/profile');
+          res.redirect('/home');
         }
+      } else {
+        res.status(401).send('Неверное имя пользователя или пароль');
       }
     } else {
       res.status(401).send('Неверное имя пользователя или пароль');
@@ -72,8 +130,10 @@ router.post(
 router.get(
     '/profile', isAuthorized,
     hasRole('Пользователь'),
-    (req, res) => {
-  res.render('profile');
+    async (req, res) => {
+  const user = req.session.user;
+  const cartItemsCount = await getCartItemsCount(user.id);
+  res.render('profile', { user, cartItemsCount });
 });
 
 router.post('/profileUpdate', isAuthorized, hasRole('Пользователь'), async (req, res) => {

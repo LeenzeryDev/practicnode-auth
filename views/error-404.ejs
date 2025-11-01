@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <title>Ошибка 404 - Книжный магазин</title>
+</head>
+<body>
+    <nav>
+        <a href="/home" class="logo">Книжный магазин</a>
+        <ul>
+            <li><a href="/home">Главная</a></li>
+            <li><a href="/catalog">Каталог</a></li>
+            <li><a href="/cart">Корзина</a></li>
+            <% if (typeof user !== 'undefined' && user) { %>
+            <li><a href="/profile">Профиль</a></li>
+            <li><a href="/logout">Выйти</a></li>
+            <% } else { %>
+            <li><a href="/login">Войти</a></li>
+            <% } %>
+        </ul>
+    </nav>
+
+    <div class="error-404">
+        <h1>404</h1>
+        <h2>Страница не найдена</h2>
+        <p>К сожалению, запрашиваемая страница не существует.</p>
+        <a href="/home" class="btn btn-primary">Вернуться на главную</a>
+    </div>
+</body>
+</html>

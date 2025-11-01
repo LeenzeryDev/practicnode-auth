@@ -3,6 +3,10 @@ body {
   background: #f0f2f5;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+}
+
+body.login-page {
   display: flex;
   height: 100vh;
   justify-content: center;
@@ -15,6 +19,274 @@ body {
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   text-align: center;
+}
+
+/* Навигация */
+nav {
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li a {
+  color: #333;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+nav ul li a:hover {
+  background: #f0f2f5;
+}
+
+nav .cart-link {
+  position: relative;
+}
+
+nav .cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+/* Главная страница */
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+/* Каталог */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.product-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  background: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+
+.product-info {
+  padding: 1.5rem;
+}
+
+.product-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.product-info .category {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.product-info .description {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  min-height: 40px;
+}
+
+.product-info .price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 1rem;
+}
+
+.product-info button {
+  width: 100%;
+}
+
+/* Корзина */
+.cart-item {
+  background: white;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.cart-item-info h3 {
+  margin: 0 0 0.5rem 0;
+}
+
+.cart-item-info .price {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-control input {
+  width: 60px;
+  text-align: center;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.cart-total {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-top: 2rem;
+  text-align: right;
+}
+
+.cart-total h2 {
+  margin-bottom: 1rem;
+}
+
+.empty-cart {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.empty-cart h2 {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* 404 страница */
+.error-404 {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.error-404 h1 {
+  font-size: 6rem;
+  color: #007bff;
+  margin: 0;
+}
+
+.error-404 h2 {
+  margin: 1rem 0;
+}
+
+.error-404 p {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* Утилиты */
+.btn {
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.3s;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.btn-small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
 }
 
 h1 {

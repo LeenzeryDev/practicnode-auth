@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Главная - Книжный магазин</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+<body>
+    <nav>
+        <a href="/home" class="logo">Книжный магазин</a>
+        <ul>
+            <li><a href="/home">Главная</a></li>
+            <li><a href="/catalog">Каталог</a></li>
+            <li>
+                <a href="/cart" class="cart-link">
+                    Корзина
+                    <% if (typeof cartItemsCount !== 'undefined' && cartItemsCount > 0) { %>
+                    <span class="cart-badge"><%= cartItemsCount %></span>
+                    <% } %>
+                </a>
+            </li>
+            <% if (typeof user !== 'undefined' && user) { %>
+            <li><a href="/profile">Профиль</a></li>
+            <li><a href="/logout">Выйти</a></li>
+            <% } else { %>
+            <li><a href="/login">Войти</a></li>
+            <% } %>
+        </ul>
+    </nav>
+
+    <div class="hero">
+        <h1>Добро пожаловать в книжный магазин!</h1>
+        <p>Откройте для себя тысячи книг на любой вкус</p>
+        <a href="/catalog" class="btn btn-primary">Перейти в каталог</a>
+    </div>
+
+    <div class="content-wrapper">
+        <h2>Почему выбирают нас?</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+            <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0;">Большой выбор</h3>
+                <p>Широкий ассортимент книг различных жанров</p>
+            </div>
+            <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0;">Доступные цены</h3>
+                <p>Конкурентные цены на все наши издания</p>
+            </div>
+            <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0;">Быстрая доставка</h3>
+                <p>Оперативная обработка и доставка заказов</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

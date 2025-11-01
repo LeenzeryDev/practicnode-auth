@@ -3,24 +3,44 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Профиль</title>
-    <link rel="stylesheet" href="../stylesheets/style.css" />
+    <title>Профиль - Книжный магазин</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
 </head>
 <body>
-<div class="container">
-    <h1>Добро пожаловать в профиль!</h1>
-    <p>Вы успешно вошли в систему.</p>
-    <h2>Здесь вы можете изменить ваши данные</h2>
-    <form id="profileForm" method="POST" action="/profileUpdate">
-        <label for="username">Имя пользователя:</label>
-        <input type="text" id="username" name="username" required />
+    <nav>
+        <a href="/home" class="logo">Книжный магазин</a>
+        <ul>
+            <li><a href="/home">Главная</a></li>
+            <li><a href="/catalog">Каталог</a></li>
+            <li>
+                <a href="/cart" class="cart-link">
+                    Корзина
+                    <% if (typeof cartItemsCount !== 'undefined' && cartItemsCount > 0) { %>
+                    <span class="cart-badge"><%= cartItemsCount %></span>
+                    <% } %>
+                </a>
+            </li>
+            <li><a href="/profile">Профиль</a></li>
+            <li><a href="/logout">Выйти</a></li>
+        </ul>
+    </nav>
 
-        <label for="password">Пароль:</label>
-        <input type="password" id="password" name="password" required />
+    <div class="content-wrapper">
+        <div class="container" style="max-width: 600px; margin: 2rem auto;">
+            <h1>Добро пожаловать в профиль!</h1>
+            <p>Вы успешно вошли в систему.</p>
+            <h2>Здесь вы можете изменить ваши данные</h2>
+            <form id="profileForm" method="POST" action="/profileUpdate">
+                <label for="username">Имя пользователя:</label>
+                <input type="text" id="username" name="username" required />
 
-        <button type="submit">Изменить данные</button>
-    </form>
-    <a href="/logout">Выйти</a>
-</div>
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required />
+
+                <button type="submit">Изменить данные</button>
+            </form>
+            <p style="margin-top: 1rem;"><a href="/logout">Выйти</a></p>
+        </div>
+    </div>
 </body>
 </html>

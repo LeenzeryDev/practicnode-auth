@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Каталог - Книжный магазин</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+<body>
+    <nav>
+        <a href="/home" class="logo">Книжный магазин</a>
+        <ul>
+            <li><a href="/home">Главная</a></li>
+            <li><a href="/catalog">Каталог</a></li>
+            <li>
+                <a href="/cart" class="cart-link">
+                    Корзина
+                    <% if (typeof cartItemsCount !== 'undefined' && cartItemsCount > 0) { %>
+                    <span class="cart-badge"><%= cartItemsCount %></span>
+                    <% } %>
+                </a>
+            </li>
+            <% if (typeof user !== 'undefined' && user) { %>
+            <li><a href="/profile">Профиль</a></li>
+            <li><a href="/logout">Выйти</a></li>
+            <% } else { %>
+            <li><a href="/login">Войти</a></li>
+            <% } %>
+        </ul>
+    </nav>
+
+    <div class="content-wrapper">
+        <h1>Каталог книг</h1>
+        
+        <% if (products && products.length > 0) { %>
+        <div class="products-grid">
+            <% products.forEach(product => { %>
+            <div class="product-card">
+                <div class="product-image">
+                    📖
+                </div>
+                <div class="product-info">
+                    <h3><%= product.name %></h3>
+                    <div class="category"><%= product.category || 'Без категории' %></div>
+                    <div class="description"><%= product.description || '' %></div>
+                    <div class="price"><%= product.price %> ₽</div>
+                    <div style="margin-bottom: 0.5rem; color: #666; font-size: 0.9rem;">
+                        В наличии: <%= product.stock %> шт.
+                    </div>
+                    <% if (product.stock > 0) { %>
+                    <button class="btn btn-primary" onclick="addToCart(<%= product.id %>)">
+                        В корзину
+                    </button>
+                    <% } else { %>
+                    <button class="btn" disabled style="background: #ccc; cursor: not-allowed;">
+                        Нет в наличии
+                    </button>
+                    <% } %>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+        <% } else { %>
+        <div style="text-align: center; padding: 4rem 2rem;">
+            <h2>Книги не найдены</h2>
+            <p>К сожалению, в данный момент каталог пуст.</p>
+        </div>
+        <% } %>
+    </div>
+
+    <script>
+        function addToCart(productId) {
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId: productId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Товар добавлен в корзину!');
+                    location.reload();
+                } else {
+                    alert(data.message || 'Ошибка при добавлении товара');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка. Пожалуйста, войдите в систему.');
+            });
+        }
+    </script>
+</body>
+</html>
+
